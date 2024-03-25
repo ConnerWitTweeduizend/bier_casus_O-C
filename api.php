@@ -29,4 +29,3 @@ if ($loggedInUserId === null) {
 }
 
 echo showBeerRatings($dbh, $loggedInUserId);
-?>

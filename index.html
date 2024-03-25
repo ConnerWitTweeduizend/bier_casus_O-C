@@ -6,7 +6,8 @@
     <title>Beer</title>
     <style>
         body {
-            background-color: gray;
+            background-image: url(celebration-of-beer-background-free-vector.jpg);
+            
         }
 
         table {
@@ -30,7 +31,7 @@
             window.location.href = 'login.html'; // Redirect to login page if not logged in
         } else {
             // Fetch beer ratings for the logged-in user
-            fetch('http://localhost/api/api.php?user_id=' + loggedInUser, { mode: 'cors' })
+            fetch('http://localhost/frontend/bier_casus_O-C/api.php?user_id=' + loggedInUser, { mode: 'cors' })
                 .then(function (response) {
                     return response.json();
                 })
