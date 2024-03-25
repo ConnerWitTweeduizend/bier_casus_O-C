@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Beer</title>
+    <style>
+        body {
+            background-color: gray;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+            background-color: gray;
+        }
+    </style>
+</head>
+<script>
+    // Function to check if the user is logged in
+    function checkLoggedIn() {
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        if (!loggedInUser) {
+            window.location.href = 'login.html'; // Redirect to login page if not logged in
+        } else {
+            // Fetch beer ratings for the logged-in user
+            fetch('http://localhost/api/api.php?user_id=' + loggedInUser, { mode: 'cors' })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    console.log('Request successful', data);
+                    populateBeerTable(data); // Populate the beer table with fetched data
+                })
+                .catch(function (error) {
+                    console.log('Request failed', error)
+                });
+        }
+    }
+
+    // Function to populate the beer table with data
+    function populateBeerTable(data) {
+        const tableBody = document.getElementById("beerTableBody");
+        data.forEach(function (item) {
+            const newRow = document.createElement("tr");
+            const idCell = document.createElement("td");
+            const nameCell = document.createElement("td");
+            const brewerCell = document.createElement("td");
+            const ratingCell = document.createElement("td");
+            const noteCell = document.createElement("td");
+
+            idCell.textContent = item.id;
+            nameCell.textContent = item.name;
+            brewerCell.textContent = item.brewer;
+            ratingCell.textContent = item.rating !== null ? item.rating : '-';
+            noteCell.textContent = item.note !== null ? item.note : '-';
+
+            newRow.appendChild(idCell);
+            newRow.appendChild(nameCell);
+            newRow.appendChild(brewerCell);
+            newRow.appendChild(ratingCell);
+            newRow.appendChild(noteCell);
+
+            tableBody.appendChild(newRow);
+        });
+    }
+
+    // Function to handle logout
+    function logout() {
+        localStorage.removeItem('loggedInUser'); // Clear user session
+        window.location.href = 'login.html'; // Redirect to login page after logout
+    }
+
+    // Check if the user is logged in on page load
+    document.addEventListener('DOMContentLoaded', checkLoggedIn);
+</script>
+
+<body>
+    <h1>Beer-Casus</h1>
+    <button onclick="logout()">Logout</button> <!-- Logout button -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Brewer</th>
+                <th>Personal Rating</th>
+                <th>Personal Note</th>
+                <th>New Rating</th>
+                <th>New Note</th>
+            </tr>
+        </thead>
+        <tbody id="beerTableBody">
+            <!-- Table rows will be dynamically added here -->
+        </tbody>
+    </table>
+</body>
+
+</html>
